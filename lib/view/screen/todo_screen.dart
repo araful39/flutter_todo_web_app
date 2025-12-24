@@ -41,11 +41,7 @@ class TodoScreen extends StatelessWidget {
               if (todo == null) {
                 controller.addTodo(title, descController.text.trim());
               } else {
-                controller.updateTodo(
-                  todo,
-                  title,
-                  descController.text.trim(),
-                );
+                controller.updateTodo(todo, title, descController.text.trim());
               }
             },
             child: Text(todo == null ? 'Add' : 'Update'),
@@ -90,47 +86,48 @@ class TodoScreen extends StatelessWidget {
                 : [Colors.indigo.shade100, Colors.white],
           ),
         ),
-        child: Obx(
-          () {
-            if (controller.isLoading.value) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        child: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            if (controller.todos.isEmpty) {
-              return const Center(
-                child: Text(
-                  'No todos yet. Add one!',
-                  style: TextStyle(fontSize: 20),
-                ),
-              );
-            }
-
-            return GridView.builder(
-              padding: EdgeInsets.all(width > 600 ? 32 : 16).copyWith(top: 120),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                childAspectRatio: 1.4,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
+          if (controller.todos.isEmpty) {
+            return const Center(
+              child: Text(
+                'No todos yet. Add one!',
+                style: TextStyle(fontSize: 20),
               ),
-              itemCount: controller.todos.length,
-              itemBuilder: (context, index) {
-                final todo = controller.todos[index];
-                return AnimatedTodoCard(
-                  todo: todo,
-                  onEdit: () => showAddEditDialog(todo: todo),
-                  onDelete: () => controller.deleteTodo(todo.id),
-                );
-              },
             );
-          },
-        ),
+          }
+
+          return GridView.builder(
+            padding: EdgeInsets.all(width > 600 ? 32 : 16).copyWith(top: 120),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              childAspectRatio: 1.4,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
+            ),
+            itemCount: controller.todos.length,
+            itemBuilder: (context, index) {
+              final todo = controller.todos[index];
+              return AnimatedTodoCard(
+                todo: todo,
+                onEdit: () => showAddEditDialog(todo: todo),
+                onDelete: () => controller.deleteTodo(todo.id),
+              );
+            },
+          );
+        }),
       ),
       floatingActionButton: width > 600
           ? FloatingActionButton.extended(
               onPressed: () => showAddEditDialog(),
-              label: const Text('Add Todo'),
-              icon: const Icon(Icons.add),
+              label: const Text(
+                'Add Todo',
+                style: TextStyle(color: Colors.white),
+              ),
+              icon: const Icon(Icons.add, color: Colors.white),
               backgroundColor: Colors.indigo,
             )
           : FloatingActionButton(
